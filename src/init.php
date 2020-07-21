@@ -924,3 +924,6 @@ require_once plugin_dir_path( __FILE__ ) . 'blocks/styled-list/block.php';
 
 // How To
 require_once plugin_dir_path( __FILE__ ) . 'blocks/how-to/block.php';
+
+// Advanced Heading
+require_once plugin_dir_path( __FILE__ ) . 'blocks/advanced-heading/block.php';
