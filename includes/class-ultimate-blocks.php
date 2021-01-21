@@ -104,8 +104,13 @@ class Ultimate_Blocks {
 		 */
 		require_once ULTIMATE_BLOCKS_PATH . 'public/class-ultimate-blocks-public.php';
 
-		$this->loader = new Ultimate_Blocks_Loader();
+		/**
+		 * Saved layouts operation manager.
+		 */
+		require_once ULTIMATE_BLOCKS_PATH . 'includes/managers/class-ultimate-blocks-saved-layouts-manager.php';
+		Ultimate_Blocks_Saved_Layouts_Manager::initialize_manager();
 
+		$this->loader = new Ultimate_Blocks_Loader();
 	}
 
 	/**

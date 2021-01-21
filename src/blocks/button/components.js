@@ -7,6 +7,7 @@ import {
 
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { fab } from "@fortawesome/free-brands-svg-icons";
+import SavedLayouts from "../../commonComponents/SavedLayouts";
 
 const {
 	BlockControls,
@@ -411,6 +412,7 @@ export const inspectorControls = (props) => {
 						}
 					</TabPanel>
 				</PanelBody>
+				<SavedLayouts></SavedLayouts>
 			</InspectorControls>
 		)
 	);
