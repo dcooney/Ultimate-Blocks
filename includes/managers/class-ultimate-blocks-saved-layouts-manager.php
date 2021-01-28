@@ -17,11 +17,26 @@ class Ultimate_Blocks_Saved_Layouts_Manager {
 	const REST_ROUTE_NAMESPACE = 'ultimate-blocks/v1';
 
 	/**
+	 * Nonce action constant for saved layouts component.
+	 */
+	const NONCE_ACTION = 'saved-layouts';
+
+	/**
 	 * Initialize and make necessary setup operations for manager.
 	 */
 	public static function initialize_manager() {
 		// add saved layout related endpoints
 		add_action( 'rest_api_init', [ __CLASS__, 'saved_layouts_rest_endpoints' ] );
+		add_filter( 'ultimate-blocks/editor_script_data', [ __CLASS__, 'editor_data' ] );
+	}
+
+	public static function editor_data( $data ) {
+		$data['savedLayouts'] = [
+			'security' => [
+				'nonce' => wp_create_nonce( self::NONCE_ACTION )
+			]
+		];
+		return $data;
 	}
 
 	/**
@@ -70,7 +85,7 @@ class Ultimate_Blocks_Saved_Layouts_Manager {
 		register_rest_route( self::REST_ROUTE_NAMESPACE, '/saved-layouts', [
 			'methods'             => 'GET',
 			'callback'            => [ __CLASS__, 'saved_layouts_get_method_callback' ],
-			'permission_callback' => '__return_true'
+			'permission_callback' => static::generic_permission_callback(self::NONCE_ACTION)
 		] );
 	}
 }

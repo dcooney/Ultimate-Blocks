@@ -9,6 +9,7 @@
  * Webpack is compiling as the input file.
  */
 
+import "./stores";
 import "./blocks/notification-box/block";
 import "./blocks/testimonial/block";
 import "./blocks/call-to-action/block";
