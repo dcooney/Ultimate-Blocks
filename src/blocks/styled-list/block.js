@@ -305,7 +305,14 @@ registerBlockType("ub/styled-list", {
 								/>
 							)}
 						</div>
-						<p>{__("Icon color")}</p>
+						<p>
+							{__("Icon color")}
+							<span
+								class="component-color-indicator"
+								aria-label={`(Color: ${iconColor})`}
+								style={{ background: iconColor }}
+							/>
+						</p>
 						<ColorPalette
 							value={iconColor}
 							onChange={(iconColor) => setAttributes({ iconColor })}

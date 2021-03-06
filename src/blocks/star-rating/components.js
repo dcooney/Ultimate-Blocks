@@ -89,12 +89,17 @@ export const inspectorControls = (props) => {
 				/>
 			</PanelBody>
 			<PanelBody>
-				<p>{__("Text Color")}</p>
+				<p>
+					{__("Text Color")}
+					<span
+						class="component-color-indicator"
+						aria-label={`(Color: ${reviewTextColor})`}
+						style={{ background: reviewTextColor }}
+					/>
+				</p>
 				<ColorPalette
 					value={reviewTextColor}
-					onChange={(colorValue) =>
-						setAttributes({ reviewTextColor: colorValue })
-					}
+					onChange={(reviewTextColor) => setAttributes({ reviewTextColor })}
 				/>
 			</PanelBody>
 		</InspectorControls>
