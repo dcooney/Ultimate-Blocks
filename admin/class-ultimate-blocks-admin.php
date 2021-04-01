@@ -27,7 +27,7 @@ class Ultimate_Blocks_Admin {
 	 *
 	 * @since    1.0.2
 	 * @access   private
-	 * @var      string    $plugin_name    The ID of this plugin.
+	 * @var      string $plugin_name The ID of this plugin.
 	 */
 	private $plugin_name;
 
@@ -36,7 +36,7 @@ class Ultimate_Blocks_Admin {
 	 *
 	 * @since    1.0.2
 	 * @access   private
-	 * @var      string    $version    The current version of this plugin.
+	 * @var      string $version The current version of this plugin.
 	 */
 	private $version;
 
@@ -45,7 +45,7 @@ class Ultimate_Blocks_Admin {
 	 *
 	 * @since    1.0.2
 	 * @access   private
-	 * @var      string    $plugin_name    The PATH of this plugin.
+	 * @var      string $plugin_name The PATH of this plugin.
 	 */
 	private $plugin_path;
 
@@ -54,7 +54,7 @@ class Ultimate_Blocks_Admin {
 	 *
 	 * @since    1.0.2
 	 * @access   private
-	 * @var      string    $plugin_name    The URL of this plugin.
+	 * @var      string $plugin_name The URL of this plugin.
 	 */
 	private $plugin_url;
 
@@ -92,7 +92,8 @@ class Ultimate_Blocks_Admin {
 		 */
 		global $menu_page;
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/ultimate-blocks-admin.css', array(), $this->version, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/ultimate-blocks-admin.css', array(),
+				$this->version, 'all' );
 
 	}
 
@@ -120,8 +121,25 @@ class Ultimate_Blocks_Admin {
 			return;
 		}
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ultimate-blocks-admin.js', array( 'jquery' ), $this->version, false );
+		// @deprecated
+//		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/ultimate-blocks-admin.js',
+//				array( 'jquery' ), $this->version, false );
 
+		$menu_relative_path = 'dist/settingsMenu.js';
+		$js_url                = trailingslashit( ULTIMATE_BLOCKS_URL ) . $menu_relative_path;
+		$js_path               = trailingslashit( ULTIMATE_BLOCKS_PATH ) . $menu_relative_path;
+		$js_version            = @filemtime( $js_path );
+
+		// TODO [erdembircan] change version to current plugin version for production
+		wp_enqueue_script( 'ub_settings_menu', $js_url, [], $js_version, true );
+
+
+		$menu_css_relative_path = 'dist/settingsMenu.css';
+		$css_url                = trailingslashit( ULTIMATE_BLOCKS_URL ) . $menu_css_relative_path;
+		$css_path               = trailingslashit( ULTIMATE_BLOCKS_PATH ) . $menu_css_relative_path;
+		$css_version            = @filemtime( $css_path );
+
+		wp_enqueue_style('ub_settings_menu_styles', $css_url, [], $css_version);
 	}
 
 
@@ -135,12 +153,12 @@ class Ultimate_Blocks_Admin {
 		global $menu_page;
 
 		$menu_page = add_menu_page(
-			'Ultimate Blocks Settings',
-			'Ultimate Blocks',
-			'manage_options',
-			'ultimate-blocks-settings',
-			array( $this, 'main_menu_template_cb' ),
-			plugin_dir_url( __FILE__ ) . 'images/logos/menu-icon.svg'
+				'Ultimate Blocks Settings',
+				'Ultimate Blocks',
+				'manage_options',
+				'ultimate-blocks-settings',
+				array( $this, 'main_menu_template_cb' ),
+				plugin_dir_url( __FILE__ ) . 'images/logos/menu-icon.svg'
 		);
 
 	}
@@ -148,20 +166,21 @@ class Ultimate_Blocks_Admin {
 	/**
 	 * Set template for main setting page
 	 *
-	 * @since    1.0.2
 	 * @return void
+	 * @since    1.0.2
 	 */
 	public function main_menu_template_cb() {
 
-		require_once $this->plugin_path . 'admin/templates/menus/main-menu.php';
+		// TODO [erdembircan] change filename to main-menu for production
+		require_once $this->plugin_path . 'admin/templates/menus/main-menu-overhaul.php';
 
 	}
 
 	/**
 	 * Enable/Disable Block
 	 *
-	 * @since    1.0.2
 	 * @return void
+	 * @since    1.0.2
 	 */
 	public function toggle_block_status() {
 
@@ -173,23 +192,23 @@ class Ultimate_Blocks_Admin {
 
 		if ( ! $this->block_exists( $block_name ) ) {
 			wp_send_json_error( array(
-				'error_message' => 'Unknown block name',
-			));
+					'error_message' => 'Unknown block name',
+			) );
 		}
 
-		$uploadDir = dirname(dirname(dirname(__DIR__))) . '/uploads';
-		$canMakeCustomFile = is_writable($uploadDir);
+		$uploadDir         = dirname( dirname( dirname( __DIR__ ) ) ) . '/uploads';
+		$canMakeCustomFile = is_writable( $uploadDir );
 
 		$saved_blocks = get_option( 'ultimate_blocks', false );
 		if ( $saved_blocks ) {
 
-			if($canMakeCustomFile){
-				if(!file_exists($uploadDir . '/ultimate-blocks')){
-					mkdir($uploadDir . '/ultimate-blocks');
+			if ( $canMakeCustomFile ) {
+				if ( ! file_exists( $uploadDir . '/ultimate-blocks' ) ) {
+					mkdir( $uploadDir . '/ultimate-blocks' );
 				}
-				$frontStyleFile = fopen($uploadDir . '/ultimate-blocks/blocks.style.build.css', 'w');
-				$adminStyleFile = fopen($uploadDir . '/ultimate-blocks/blocks.editor.build.css', 'w');
-				$blockDir = dirname(__DIR__) . '/src/blocks/';
+				$frontStyleFile = fopen( $uploadDir . '/ultimate-blocks/blocks.style.build.css', 'w' );
+				$adminStyleFile = fopen( $uploadDir . '/ultimate-blocks/blocks.editor.build.css', 'w' );
+				$blockDir       = dirname( __DIR__ ) . '/src/blocks/';
 			}
 
 			foreach ( $saved_blocks as $key => $block ) {
@@ -197,41 +216,42 @@ class Ultimate_Blocks_Admin {
 					$saved_blocks[ $key ]['active'] = ( $enable === 'true' );
 				}
 
-				if($canMakeCustomFile){
-					$blockDirName = strtolower(str_replace(' ', '-', 
-					trim(preg_replace('/\(.+\)/', '', $saved_blocks[ $key ]['label']))
-						));
+				if ( $canMakeCustomFile ) {
+					$blockDirName       = strtolower( str_replace( ' ', '-',
+							trim( preg_replace( '/\(.+\)/', '', $saved_blocks[ $key ]['label'] ) )
+					) );
 					$frontStyleLocation = $blockDir . $blockDirName . '/style.css';
 					$adminStyleLocation = $blockDir . $blockDirName . '/editor.css';
-	
-					if(file_exists($frontStyleLocation) && $saved_blocks[ $key ]['active']){ //also detect if block is enabled
-						if($block['name'] == 'ub/click-to-tweet'){
-							fwrite($frontStyleFile, str_replace("src/blocks/click-to-tweet/icons", "ultimate-blocks", file_get_contents($frontStyleLocation)));
-						}
-						else{
-							fwrite($frontStyleFile, file_get_contents($frontStyleLocation));
+
+					if ( file_exists( $frontStyleLocation ) && $saved_blocks[ $key ]['active'] ) { //also detect if block is enabled
+						if ( $block['name'] == 'ub/click-to-tweet' ) {
+							fwrite( $frontStyleFile, str_replace( "src/blocks/click-to-tweet/icons", "ultimate-blocks",
+									file_get_contents( $frontStyleLocation ) ) );
+						} else {
+							fwrite( $frontStyleFile, file_get_contents( $frontStyleLocation ) );
 						}
 					}
-					if(file_exists($adminStyleLocation) && $saved_blocks[ $key ]['active']){
-						fwrite($adminStyleFile, file_get_contents($adminStyleLocation));
+					if ( file_exists( $adminStyleLocation ) && $saved_blocks[ $key ]['active'] ) {
+						fwrite( $adminStyleFile, file_get_contents( $adminStyleLocation ) );
 					}
 
-					if($block['name'] === 'ub/styled-box' && $saved_blocks[$key]['active']){
+					if ( $block['name'] === 'ub/styled-box' && $saved_blocks[ $key ]['active'] ) {
 						//add css for blocks phased out by styled box
-						fwrite($frontStyleFile, file_get_contents($blockDir . 'feature-box' . '/style.css'));
-						fwrite($frontStyleFile, file_get_contents($blockDir . 'notification-box' . '/style.css'));
-						fwrite($frontStyleFile, file_get_contents($blockDir . 'number-box' . '/style.css'));
+						fwrite( $frontStyleFile, file_get_contents( $blockDir . 'feature-box' . '/style.css' ) );
+						fwrite( $frontStyleFile, file_get_contents( $blockDir . 'notification-box' . '/style.css' ) );
+						fwrite( $frontStyleFile, file_get_contents( $blockDir . 'number-box' . '/style.css' ) );
 
-						fwrite($adminStyleFile, file_get_contents($blockDir . 'feature-box' . '/editor.css'));
-						fwrite($adminStyleFile, file_get_contents($blockDir . 'number-box' . '/editor.css'));
+						fwrite( $adminStyleFile, file_get_contents( $blockDir . 'feature-box' . '/editor.css' ) );
+						fwrite( $adminStyleFile, file_get_contents( $blockDir . 'number-box' . '/editor.css' ) );
 					}
 				}
 			}
-			
-			if($canMakeCustomFile){
-				fclose($frontStyleFile);
-				fclose($adminStyleFile);
-				copy(dirname(__DIR__) . '/src/blocks/click-to-tweet/icons/sprite-twitter.png', wp_upload_dir()['basedir'] . '/ultimate-blocks/sprite-twitter.png');
+
+			if ( $canMakeCustomFile ) {
+				fclose( $frontStyleFile );
+				fclose( $adminStyleFile );
+				copy( dirname( __DIR__ ) . '/src/blocks/click-to-tweet/icons/sprite-twitter.png',
+						wp_upload_dir()['basedir'] . '/ultimate-blocks/sprite-twitter.png' );
 			}
 
 			update_option( 'ultimate_blocks', $saved_blocks );
@@ -245,14 +265,14 @@ class Ultimate_Blocks_Admin {
 	/**
 	 * Insert Blocks Settings as a Js Global variable.
 	 *
-	 * @since    1.0.2
 	 * @return void
+	 * @since    1.0.2
 	 */
 	public function insert_blocks_settings() {
 		$ultimate_blocks_settings = wp_json_encode( get_option( 'ultimate_blocks', array() ) );
 		?>
 
-		<script> window.ultimate_blocks=<?php echo $ultimate_blocks_settings; ?> </script>
+		<script> window.ultimate_blocks =<?php echo $ultimate_blocks_settings; ?> </script>
 
 		<?php
 	}
@@ -260,8 +280,8 @@ class Ultimate_Blocks_Admin {
 	/**
 	 * Execute functions when admin area is loaded.
 	 *
-	 * @since    1.0.2
 	 * @return void
+	 * @since    1.0.2
 	 */
 	public function on_admin_init() {
 		$this->register_new_blocks();
@@ -270,8 +290,8 @@ class Ultimate_Blocks_Admin {
 	/**
 	 * Insert Blocks Settings as a Js Global variable.
 	 *
-	 * @since    1.0.2
 	 * @return void
+	 * @since    1.0.2
 	 */
 	public function register_new_blocks() {
 		$blocks = $this->blocks();
@@ -296,9 +316,10 @@ class Ultimate_Blocks_Admin {
 	/**
 	 * Check block exists.
 	 *
-	 * @since    1.0.2
 	 * @param string $name Block Name.
+	 *
 	 * @return bool
+	 * @since    1.0.2
 	 */
 	protected function block_exists( $name ) {
 		$blocks = $this->blocks();
@@ -309,15 +330,17 @@ class Ultimate_Blocks_Admin {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
 	/**
 	 * Check block is registered.
 	 *
-	 * @since    1.0.2
 	 * @param string $name Block Name.
+	 *
 	 * @return bool
+	 * @since    1.0.2
 	 */
 	protected function is_block_registered( $name, $registered_blocks ) {
 		$blocks = $registered_blocks;
@@ -328,14 +351,15 @@ class Ultimate_Blocks_Admin {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
 	/**
 	 * Get Plugin BLOCKS
 	 *
-	 * @since    1.0.2
 	 * @return array
+	 * @since    1.0.2
 	 */
 	protected static function blocks() {
 
@@ -350,49 +374,53 @@ class Ultimate_Blocks_Admin {
 	 * @since 2.1.6
 	 */
 	public static function UltimateBlocks_review_notice() {
-        
-        $install_date = get_option( 'UltimateBlocks_installDate' );
-        $display_date = date( 'Y-m-d h:i:s' );
-        $datetime1 = new DateTime( $install_date );
-        $datetime2 = new DateTime( $display_date );
-        $diff_intrval = round( ($datetime2->format( 'U' ) - $datetime1->format( 'U' )) / (60 * 60 * 24) );
+
+		$install_date = get_option( 'UltimateBlocks_installDate' );
+		$display_date = date( 'Y-m-d h:i:s' );
+		$datetime1    = new DateTime( $install_date );
+		$datetime2    = new DateTime( $display_date );
+		$diff_intrval = round( ( $datetime2->format( 'U' ) - $datetime1->format( 'U' ) ) / ( 60 * 60 * 24 ) );
 		if ( $diff_intrval >= 14 && get_option( 'UltimateBlocks_review_notify' ) == "no" ) {
 			?>
-            <div class="UltimateBlocks-review-notice notice notice-info">
-                <p style="font-size: 14px;">
-					<?php _e( 'Hey,<br> I noticed that you have been using <strong>Ultimate Blocks Plugin</strong> for a while now - that’s awesome! Could you please do me a BIG favor and <b>give it a 5-star rating on WordPress</b>? Just to help us spread the word and boost our motivation. <br>~ Imtiaz Rayhan<br>~ Lead Developer, Ultimate Blocks.', 'ultimate-blocks' ); ?>
-                </p>
-                <ul>
-                    <li><a style="margin-right: 5px; margin-bottom: 5px;" class="button-primary"
-                           href="https://wordpress.org/support/plugin/ultimate-blocks/reviews/?filter=5#new-post"
-                           target="_blank">Sure, you deserve it.</a>
-                        <a style="margin-right: 5px;" class="UltimateBlocks_HideReview_Notice button" href="javascript:void(0);">I already did.</a>
-                        <a class="UltimateBlocks_HideReview_Notice button" href="javascript:void(0);">No, not good enough.</a>
-                    </li>
-                </ul>
-            </div>
-            <script>
-                jQuery(document).ready(function ($) {
-                    jQuery('.UltimateBlocks_HideReview_Notice').click(function () {
-                        var data = {'action': 'UltimateBlocksReviewNoticeHide'};
-                        jQuery.ajax({
-                            url: "<?php echo admin_url( 'admin-ajax.php' ); ?>",
-                            type: "post",
-                            data: data,
-                            dataType: "json",
-                            async: !0,
-                            success: function (notice_hide) {
-                                if (notice_hide == "success") {
-                                    jQuery('.UltimateBlocks-review-notice').slideUp('fast');
-                                }
-                            }
-                        });
-                    });
-                });
-            </script>
+			<div class="UltimateBlocks-review-notice notice notice-info">
+				<p style="font-size: 14px;">
+					<?php _e( 'Hey,<br> I noticed that you have been using <strong>Ultimate Blocks Plugin</strong> for a while now - that’s awesome! Could you please do me a BIG favor and <b>give it a 5-star rating on WordPress</b>? Just to help us spread the word and boost our motivation. <br>~ Imtiaz Rayhan<br>~ Lead Developer, Ultimate Blocks.',
+							'ultimate-blocks' ); ?>
+				</p>
+				<ul>
+					<li><a style="margin-right: 5px; margin-bottom: 5px;" class="button-primary"
+						   href="https://wordpress.org/support/plugin/ultimate-blocks/reviews/?filter=5#new-post"
+						   target="_blank">Sure, you deserve it.</a>
+						<a style="margin-right: 5px;" class="UltimateBlocks_HideReview_Notice button"
+						   href="javascript:void(0);">I already did.</a>
+						<a class="UltimateBlocks_HideReview_Notice button" href="javascript:void(0);">No, not good
+							enough.</a>
+					</li>
+				</ul>
+			</div>
+			<script>
+				jQuery( document ).ready( function( $ ) {
+					jQuery( '.UltimateBlocks_HideReview_Notice' ).click( function() {
+						var data = { 'action': 'UltimateBlocksReviewNoticeHide' };
+						jQuery.ajax( {
+							url: "<?php echo admin_url( 'admin-ajax.php' ); ?>",
+							type: "post",
+							data: data,
+							dataType: "json",
+							async: ! 0,
+							success: function( notice_hide ) {
+								if (notice_hide == "success") {
+									jQuery( '.UltimateBlocks-review-notice' ).slideUp( 'fast' );
+								}
+							},
+						} );
+					} );
+				} );
+			</script>
 			<?php
 		}
 	}
+
 	/**
 	 * Hides the review notice.
 	 *

@@ -1,0 +1,65 @@
+@import 'library/colorPalette'
+@import 'library/settingsMenuTheme'
+
+#wpwrap
+	display: grid !important
+	grid-template-columns: 1fr
+	grid-template-rows: minmax(min-content, max-content) 1fr
+	grid-auto-rows: minmax(min-content, max-content)
+
+#wpbody, #wpbody-content
+	width: 100%
+	height: 100%
+	padding: 0 !important
+	position: relative
+
+#wpcontent
+	padding: 0 !important
+
+.ub-plugin-box-shadow-md
+	box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)
+
+.ub-menu-wrapper
+	position: absolute
+	background-color: $plugin-gray-300
+	top: 0
+	left: 0
+	width: 100%
+	height: 100%
+	z-index: $base-z-index
+	display: grid
+	grid-template-columns: 1fr
+	grid-template-rows: 1fr
+
+.ub-menu-window
+	margin: 40px 60px 40px 0
+	display: grid
+	grid-template-columns: 1fr
+	grid-template-rows: minmax(min-content, max-content) 1fr
+	grid-template-areas: 'tabs' 'content'
+
+
+.ub-window-tabs-container
+	grid-area: tabs
+	height: 50px
+	background-color: $plugin-gray-400
+
+.ub-window-content-container
+	grid-area: content
+	background-color: $plugin-gray-100
+	border-radius: 0 $base-corner-radius $base-corner-radius 0
+	border: 1px solid $base-border-color
+
+
+.ub-menu-ribbon
+	grid-area: content
+	justify-self: end
+	align-self: center
+	height: 250px
+	width: 50px
+	background-color: $plugin-logo-color
+	transform: translateX(50%)
+	border-radius: $base-corner-radius
+	border-bottom-right-radius: 0 !important
+
+
