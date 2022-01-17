@@ -16,13 +16,14 @@ import {
 	editorDisplay,
 	upgradeToStyledBox,
 } from "./components";
+import { useEffect, useState } from "react";
 
 const { __ } = wp.i18n;
 const { registerBlockType, createBlock } = wp.blocks;
 
 const { withDispatch, withSelect } = wp.data;
 
-const { withState, compose } = wp.compose;
+const { compose } = wp.compose;
 
 const attributes = {
 	blockID: {
@@ -149,70 +150,78 @@ registerBlockType("ub/number-box", {
 			replaceBlock: (dispatch("core/block-editor") || dispatch("core/editor"))
 				.replaceBlock,
 		})),
-		withState({ editable: "" }),
 	])(function (props) {
 		const { isSelected, block, replaceBlock, attributes } = props;
 
-		return [
-			isSelected && blockControls(props),
+		const [editable, setEditable] = useState("");
+		return (
+			<>
+				{isSelected && blockControls({ ...props, editable })}
 
-			isSelected && inspectorControls(props),
+				{isSelected && inspectorControls(props)}
 
-			<div className={props.className}>
-				<button
-					onClick={() => {
-						const { column, columnOneBody } = attributes;
+				<div className={props.className}>
+					<button
+						onClick={() => {
+							const { column, columnOneBody } = attributes;
 
-						let currentNumbers = [
-							mergeRichTextArray(attributes.columnOneNumber),
-						];
-						let currentTitles = [mergeRichTextArray(attributes.columnOneTitle)];
-						let currentTitleAligns = [attributes.title1Align];
-						let currentTexts = [mergeRichTextArray(columnOneBody)];
-						let currentTextAligns = [attributes.body1Align];
+							let currentNumbers = [
+								mergeRichTextArray(attributes.columnOneNumber),
+							];
+							let currentTitles = [
+								mergeRichTextArray(attributes.columnOneTitle),
+							];
+							let currentTitleAligns = [attributes.title1Align];
+							let currentTexts = [mergeRichTextArray(columnOneBody)];
+							let currentTextAligns = [attributes.body1Align];
 
-						if (parseInt(column) >= 2) {
-							currentNumbers.push(
-								mergeRichTextArray(attributes.columnTwoNumber)
+							if (parseInt(column) >= 2) {
+								currentNumbers.push(
+									mergeRichTextArray(attributes.columnTwoNumber)
+								);
+								currentTitles.push(
+									mergeRichTextArray(attributes.columnTwoTitle)
+								);
+								currentTitleAligns.push(attributes.title2Align);
+								currentTexts.push(mergeRichTextArray(attributes.columnTwoBody));
+								currentTextAligns.push(attributes.body2Align);
+							}
+							if (parseInt(column) === 3) {
+								currentNumbers.push(
+									mergeRichTextArray(attributes.columnThreeNumber)
+								);
+								currentTitles.push(
+									mergeRichTextArray(attributes.columnThreeTitle)
+								);
+								currentTitleAligns.push(attributes.title3Align);
+								currentTexts.push(
+									mergeRichTextArray(attributes.columnThreeBody)
+								);
+								currentTextAligns.push(attributes.body3Align);
+							}
+
+							replaceBlock(
+								block.clientId,
+								createBlock("ub/styled-box", {
+									mode: "number",
+									number: currentNumbers,
+									title: currentTitles,
+									titleAlign: currentTitleAligns,
+									text: currentTexts,
+									textAlign: currentTextAligns,
+									backColor: attributes.numberBackground,
+									foreColor: attributes.numberColor,
+									outlineColor: attributes.borderColor,
+								})
 							);
-							currentTitles.push(mergeRichTextArray(attributes.columnTwoTitle));
-							currentTitleAligns.push(attributes.title2Align);
-							currentTexts.push(mergeRichTextArray(attributes.columnTwoBody));
-							currentTextAligns.push(attributes.body2Align);
-						}
-						if (parseInt(column) === 3) {
-							currentNumbers.push(
-								mergeRichTextArray(attributes.columnThreeNumber)
-							);
-							currentTitles.push(
-								mergeRichTextArray(attributes.columnThreeTitle)
-							);
-							currentTitleAligns.push(attributes.title3Align);
-							currentTexts.push(mergeRichTextArray(attributes.columnThreeBody));
-							currentTextAligns.push(attributes.body3Align);
-						}
-
-						replaceBlock(
-							block.clientId,
-							createBlock("ub/styled-box", {
-								mode: "number",
-								number: currentNumbers,
-								title: currentTitles,
-								titleAlign: currentTitleAligns,
-								text: currentTexts,
-								textAlign: currentTextAligns,
-								backColor: attributes.numberBackground,
-								foreColor: attributes.numberColor,
-								outlineColor: attributes.borderColor,
-							})
-						);
-					}}
-				>
-					{upgradeButtonLabel}
-				</button>
-				{editorDisplay(props)}
-			</div>,
-		];
+						}}
+					>
+						{upgradeButtonLabel}
+					</button>
+					{editorDisplay({ ...props, editable, setEditable })}
+				</div>
+			</>
+		);
 	}),
 
 	/**
@@ -249,23 +258,14 @@ registerBlockType("ub/number-box", {
 		return (
 			<div className={props.className}>
 				<div className={`ub_number_box column_${column}`}>
-					<div
-						className="ub_number_1"
-						style={{
-							borderColor: borderColor,
-						}}
-					>
+					<div className="ub_number_1" style={{ borderColor: borderColor }}>
 						<div
 							className="ub_number_box_number"
-							style={{
-								backgroundColor: numberBackground,
-							}}
+							style={{ backgroundColor: numberBackground }}
 						>
 							<p
 								className="ub_number_one_number"
-								style={{
-									color: numberColor,
-								}}
+								style={{ color: numberColor }}
 							>
 								{columnOneNumber}
 							</p>
@@ -280,23 +280,14 @@ registerBlockType("ub/number-box", {
 							{columnOneBody}
 						</p>
 					</div>
-					<div
-						className="ub_number_2"
-						style={{
-							borderColor: borderColor,
-						}}
-					>
+					<div className="ub_number_2" style={{ borderColor: borderColor }}>
 						<div
 							className="ub_number_box_number"
-							style={{
-								backgroundColor: numberBackground,
-							}}
+							style={{ backgroundColor: numberBackground }}
 						>
 							<p
 								className="ub_number_two_number"
-								style={{
-									color: numberColor,
-								}}
+								style={{ color: numberColor }}
 							>
 								{columnTwoNumber}
 							</p>
@@ -311,23 +302,14 @@ registerBlockType("ub/number-box", {
 							{columnTwoBody}
 						</p>
 					</div>
-					<div
-						className="ub_number_3"
-						style={{
-							borderColor: borderColor,
-						}}
-					>
+					<div className="ub_number_3" style={{ borderColor: borderColor }}>
 						<div
 							className="ub_number_box_number"
-							style={{
-								backgroundColor: numberBackground,
-							}}
+							style={{ backgroundColor: numberBackground }}
 						>
 							<p
 								className="ub_number_three_number"
-								style={{
-									color: numberColor,
-								}}
+								style={{ color: numberColor }}
 							>
 								{columnThreeNumber}
 							</p>
@@ -383,7 +365,6 @@ registerBlockType("ub/number-box-block", {
 	},
 
 	edit: compose([
-		withState({ editable: "" }),
 		withSelect((select, ownProps) => ({
 			block: (select("core/block-editor") || select("core/editor")).getBlock(
 				ownProps.clientId
@@ -396,26 +377,30 @@ registerBlockType("ub/number-box-block", {
 	])(function (props) {
 		const { isSelected, block, replaceBlock, attributes } = props;
 
-		if (attributes.blockID === "") {
-			props.setAttributes({ blockID: block.clientId });
-		}
+		useEffect(() => {
+			if (attributes.blockID === "") {
+				props.setAttributes({ blockID: block.clientId });
+			}
+		}, []);
 
-		return [
-			isSelected && blockControls(props),
+		const [editable, setEditable] = useState("");
 
-			isSelected && inspectorControls(props),
-
-			<div className={props.className}>
-				<button
-					onClick={() =>
-						replaceBlock(block.clientId, upgradeToStyledBox(attributes))
-					}
-				>
-					{upgradeButtonLabel}
-				</button>
-				{editorDisplay(props)}
-			</div>,
-		];
+		return (
+			<>
+				{isSelected && blockControls({ ...props, editable })}
+				{isSelected && inspectorControls(props)}
+				<div className={props.className}>
+					<button
+						onClick={() =>
+							replaceBlock(block.clientId, upgradeToStyledBox(attributes))
+						}
+					>
+						{upgradeButtonLabel}
+					</button>
+					{editorDisplay({ ...props, editable, setEditable })}
+				</div>
+			</>
+		);
 	}),
 	save: () => null,
 });

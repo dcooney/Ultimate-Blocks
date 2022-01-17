@@ -29,7 +29,9 @@ import {
 	editorDisplay,
 	iconSize,
 	allIcons,
-	EditorComponent,
+	//EditorComponent,
+	NewEditorComponent,
+	defaultButtonProps,
 } from "./components";
 
 const { withDispatch, withSelect } = wp.data;
@@ -167,11 +169,53 @@ registerBlockType("ub/button-block", {
 			block,
 			replaceBlock,
 			attributes,
+			setAttributes,
 		} = props;
+
+		const {
+			buttons,
+			buttonText,
+			url,
+			size,
+			buttonColor,
+			buttonHoverColor,
+			buttonTextColor,
+			buttonTextHoverColor,
+			buttonRounded,
+			chosenIcon,
+			iconPosition,
+			buttonIsTransparent,
+			addNofollow,
+			openInNewTab,
+			buttonWidth,
+		} = attributes;
 
 		if (availableIcons.length === 0) {
 			const iconList = Object.keys(allIcons).sort();
 			setState({ availableIcons: iconList.map((name) => allIcons[name]) });
+		}
+
+		if (typeof buttons === "undefined") {
+			setAttributes({
+				buttons: [
+					Object.assign({}, defaultButtonProps, {
+						buttonText,
+						url,
+						size,
+						buttonColor,
+						buttonHoverColor,
+						buttonTextColor,
+						buttonTextHoverColor,
+						buttonRounded,
+						chosenIcon,
+						iconPosition,
+						buttonIsTransparent,
+						addNofollow,
+						openInNewTab,
+						buttonWidth,
+					}),
+				],
+			});
 		}
 
 		return [
@@ -297,6 +341,6 @@ registerBlockType("ub/button", {
 			parentID: getBlockRootClientId(ownProps.clientId),
 			getClientIdsWithDescendants,
 		};
-	})(EditorComponent),
+	})(NewEditorComponent),
 	save: () => null,
 });

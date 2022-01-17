@@ -11,6 +11,7 @@ import icon from "./icons/icon";
 import { version_1_1_2, version_1_1_5, oldAttributes } from "./oldVersions";
 import { blockControls, editorDisplay, upgradeToStyledBox } from "./components";
 import { mergeRichTextArray, upgradeButtonLabel } from "../../common";
+import { useState, useEffect } from "react";
 
 const { __ } = wp.i18n;
 
@@ -18,7 +19,7 @@ const { registerBlockType, createBlock } = wp.blocks;
 
 const { withDispatch, withSelect } = wp.data;
 
-const { withState, compose } = wp.compose;
+const { compose } = wp.compose;
 
 const attributes = {
 	blockID: {
@@ -160,73 +161,82 @@ registerBlockType("ub/feature-box", {
 			replaceBlock: (dispatch("core/block-editor") || dispatch("core/editor"))
 				.replaceBlock,
 		})),
-		withState({ editable: "" }),
 	])(function (props) {
 		const { isSelected, block, replaceBlock, attributes } = props;
 
-		return [
-			isSelected && blockControls(props),
+		const [editable, setEditable] = useState("");
 
-			<div className={props.className}>
-				<button
-					onClick={() => {
-						const { column, columnOneBody } = attributes;
-						let currentTitles = [mergeRichTextArray(attributes.columnOneTitle)];
-						let currentTitleAligns = [attributes.title1Align];
-						let currentTexts = [mergeRichTextArray(columnOneBody)];
-						let currentTextAligns = [attributes.body1Align];
-						let currentImages = [
-							{
-								id: attributes.imgOneID,
-								alt: attributes.imgOneAlt,
-								url: attributes.imgOneURL,
-							},
-						];
+		return (
+			<>
+				{isSelected && blockControls({ ...props, editable })}
 
-						if (parseInt(column) >= 2) {
-							currentTitles.push(mergeRichTextArray(attributes.columnTwoTitle));
-							currentTitleAligns.push(attributes.title2Align);
-							currentTexts.push(mergeRichTextArray(attributes.columnTwoBody));
-							currentTextAligns.push(attributes.body2Align);
-							currentImages.push({
-								id: attributes.imgTwoID,
-								alt: attributes.imgTwoAlt,
-								url: attributes.imgTwoURL,
-							});
-						}
+				<div className={props.className}>
+					<button
+						onClick={() => {
+							const { column, columnOneBody } = attributes;
+							let currentTitles = [
+								mergeRichTextArray(attributes.columnOneTitle),
+							];
+							let currentTitleAligns = [attributes.title1Align];
+							let currentTexts = [mergeRichTextArray(columnOneBody)];
+							let currentTextAligns = [attributes.body1Align];
+							let currentImages = [
+								{
+									id: attributes.imgOneID,
+									alt: attributes.imgOneAlt,
+									url: attributes.imgOneURL,
+								},
+							];
 
-						if (parseInt(column) === 3) {
-							currentTitles.push(
-								mergeRichTextArray(attributes.columnThreeTitle)
+							if (parseInt(column) >= 2) {
+								currentTitles.push(
+									mergeRichTextArray(attributes.columnTwoTitle)
+								);
+								currentTitleAligns.push(attributes.title2Align);
+								currentTexts.push(mergeRichTextArray(attributes.columnTwoBody));
+								currentTextAligns.push(attributes.body2Align);
+								currentImages.push({
+									id: attributes.imgTwoID,
+									alt: attributes.imgTwoAlt,
+									url: attributes.imgTwoURL,
+								});
+							}
+
+							if (parseInt(column) === 3) {
+								currentTitles.push(
+									mergeRichTextArray(attributes.columnThreeTitle)
+								);
+								currentTitleAligns.push(attributes.title3Align);
+								currentTexts.push(
+									mergeRichTextArray(attributes.columnThreeBody)
+								);
+								currentTextAligns.push(attributes.body3Align);
+								currentImages.push({
+									id: attributes.imgThreeID,
+									alt: attributes.imgThreeAlt,
+									url: attributes.imgThreeURL,
+								});
+							}
+
+							replaceBlock(
+								block.clientId,
+								createBlock("ub/styled-box", {
+									mode: "feature",
+									title: currentTitles,
+									titleAlign: currentTitleAligns,
+									text: currentTexts,
+									textAlign: currentTextAligns,
+									image: currentImages,
+								})
 							);
-							currentTitleAligns.push(attributes.title3Align);
-							currentTexts.push(mergeRichTextArray(attributes.columnThreeBody));
-							currentTextAligns.push(attributes.body3Align);
-							currentImages.push({
-								id: attributes.imgThreeID,
-								alt: attributes.imgThreeAlt,
-								url: attributes.imgThreeURL,
-							});
-						}
-
-						replaceBlock(
-							block.clientId,
-							createBlock("ub/styled-box", {
-								mode: "feature",
-								title: currentTitles,
-								titleAlign: currentTitleAligns,
-								text: currentTexts,
-								textAlign: currentTextAligns,
-								image: currentImages,
-							})
-						);
-					}}
-				>
-					{upgradeButtonLabel}
-				</button>
-				{editorDisplay(props)}
-			</div>,
-		];
+						}}
+					>
+						{upgradeButtonLabel}
+					</button>
+					{editorDisplay({ ...props, editable, setEditable })}
+				</div>
+			</>
+		);
 	}),
 
 	/**
@@ -363,28 +373,32 @@ registerBlockType("ub/feature-box-block", {
 			replaceBlock: (dispatch("core/block-editor") || dispatch("core/editor"))
 				.replaceBlock,
 		})),
-		withState({ editable: "" }),
 	])(function (props) {
 		const { isSelected, block, replaceBlock, attributes } = props;
 
-		if (attributes.blockID === "") {
-			props.setAttributes({ blockID: block.clientId });
-		}
+		const [editable, setEditable] = useState("");
 
-		return [
-			isSelected && blockControls(props),
+		useEffect(() => {
+			if (attributes.blockID === "") {
+				props.setAttributes({ blockID: block.clientId });
+			}
+		});
 
-			<div className={props.className}>
-				<button
-					onClick={() =>
-						replaceBlock(block.clientId, upgradeToStyledBox(attributes))
-					}
-				>
-					{upgradeButtonLabel}
-				</button>
-				{editorDisplay(props)}
-			</div>,
-		];
+		return (
+			<>
+				{isSelected && blockControls({ ...props, editable })}
+				<div className={props.className}>
+					<button
+						onClick={() =>
+							replaceBlock(block.clientId, upgradeToStyledBox(attributes))
+						}
+					>
+						{upgradeButtonLabel}
+					</button>
+					{editorDisplay({ ...props, editable, setEditable })}
+				</div>
+			</>
+		);
 	}),
 	save: () => null,
 });

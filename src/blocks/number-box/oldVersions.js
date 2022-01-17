@@ -1,92 +1,92 @@
 export const oldAttributes = {
 	column: {
-		type: 'string',
-		default: '2'
+		type: "string",
+		default: "2",
 	},
 	columnOneNumber: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_one_number'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_one_number",
 	},
 	columnTwoNumber: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_two_number'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_two_number",
 	},
 	columnThreeNumber: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_three_number'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_three_number",
 	},
 	columnOneTitle: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_one_title'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_one_title",
 	},
 	columnTwoTitle: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_two_title'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_two_title",
 	},
 	columnThreeTitle: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_three_title'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_three_title",
 	},
 	columnOneBody: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_one_body'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_one_body",
 	},
 	columnTwoBody: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_two_body'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_two_body",
 	},
 	columnThreeBody: {
-		type: 'array',
-		source: 'children',
-		selector: '.ub_number_three_body'
+		type: "array",
+		source: "children",
+		selector: ".ub_number_three_body",
 	},
 	numberBackground: {
-		type: 'string',
-		default: '#CCCCCC'
+		type: "string",
+		default: "#CCCCCC",
 	},
 	numberColor: {
-		type: 'string',
-		default: '#000000'
+		type: "string",
+		default: "#000000",
 	},
 	borderColor: {
-		type: 'string',
-		default: '#CCCCCC'
+		type: "string",
+		default: "#CCCCCC",
 	},
 	title1Align: {
-		type: 'string',
-		default: 'center'
+		type: "string",
+		default: "center",
 	},
 	title2Align: {
-		type: 'string',
-		default: 'center'
+		type: "string",
+		default: "center",
 	},
 	title3Align: {
-		type: 'string',
-		default: 'center'
+		type: "string",
+		default: "center",
 	},
 	body1Align: {
-		type: 'string',
-		default: 'left'
+		type: "string",
+		default: "left",
 	},
 	body2Align: {
-		type: 'string',
-		default: 'left'
+		type: "string",
+		default: "left",
 	},
 	body3Align: {
-		type: 'string',
-		default: 'left'
-	}
+		type: "string",
+		default: "left",
+	},
 };
 
-export const version_1_1_2 = props => {
+export const version_1_1_2 = (props) => {
 	const {
 		column,
 		columnOneNumber,
@@ -100,77 +100,44 @@ export const version_1_1_2 = props => {
 		columnThreeBody,
 		numberBackground,
 		numberColor,
-		borderColor
+		borderColor,
 	} = props.attributes;
 
 	return (
 		<div className={props.className}>
 			<div className={`ub_number_box column_${column}`}>
-				<div
-					className="ub_number_1"
-					style={{
-						borderColor: borderColor
-					}}
-				>
+				<div className="ub_number_1" style={{ borderColor: borderColor }}>
 					<div
 						className="ub_number_box_number"
-						style={{
-							backgroundColor: numberBackground
-						}}
+						style={{ backgroundColor: numberBackground }}
 					>
-						<p
-							className="ub_number_one_number"
-							style={{
-								color: numberColor
-							}}
-						>
+						<p className="ub_number_one_number" style={{ color: numberColor }}>
 							{columnOneNumber}
 						</p>
 					</div>
 					<p className="ub_number_one_title">{columnOneTitle}</p>
 					<p className="ub_number_one_body">{columnOneBody}</p>
 				</div>
-				<div
-					className="ub_number_2"
-					style={{
-						borderColor: borderColor
-					}}
-				>
+				<div className="ub_number_2" style={{ borderColor: borderColor }}>
 					<div
 						className="ub_number_box_number"
-						style={{
-							backgroundColor: numberBackground
-						}}
+						style={{ backgroundColor: numberBackground }}
 					>
-						<p
-							className="ub_number_two_number"
-							style={{
-								color: numberColor
-							}}
-						>
+						<p className="ub_number_two_number" style={{ color: numberColor }}>
 							{columnTwoNumber}
 						</p>
 					</div>
 					<p className="ub_number_two_title">{columnTwoTitle}</p>
 					<p className="ub_number_two_body">{columnTwoBody}</p>
 				</div>
-				<div
-					className="ub_number_3"
-					style={{
-						borderColor: borderColor
-					}}
-				>
+				<div className="ub_number_3" style={{ borderColor: borderColor }}>
 					<div
 						className="ub_number_box_number"
-						style={{
-							backgroundColor: numberBackground
-						}}
+						style={{ backgroundColor: numberBackground }}
 					>
 						<p
 							className="ub_number_three_number"
-							style={{
-								color: numberColor
-							}}
+							style={{ color: numberColor }}
 						>
 							{columnThreeNumber}
 						</p>
@@ -183,7 +150,7 @@ export const version_1_1_2 = props => {
 	);
 };
 
-export const version_1_1_5 = props => {
+export const version_1_1_5 = (props) => {
 	const {
 		column,
 		columnOneNumber,
@@ -203,97 +170,52 @@ export const version_1_1_5 = props => {
 		title3Align,
 		body1Align,
 		body2Align,
-		body3Align
+		body3Align,
 	} = props.attributes;
 
 	return (
 		<div className={props.className}>
 			<div className={`ub_number_box column_${column}`}>
-				<div
-					className="ub_number_1"
-					style={{
-						borderColor: borderColor
-					}}
-				>
+				<div className="ub_number_1" style={{ borderColor: borderColor }}>
 					<div
 						className="ub_number_box_number"
-						style={{
-							backgroundColor: numberBackground
-						}}
+						style={{ backgroundColor: numberBackground }}
 					>
-						<p
-							className="ub_number_one_number"
-							style={{
-								color: numberColor
-							}}
-						>
+						<p className="ub_number_one_number" style={{ color: numberColor }}>
 							{columnOneNumber}
 						</p>
 					</div>
-					<p
-						className="ub_number_one_title"
-						style={{ textAlign: title1Align }}
-					>
+					<p className="ub_number_one_title" style={{ textAlign: title1Align }}>
 						{columnOneTitle}
 					</p>
-					<p
-						className="ub_number_one_body"
-						style={{ textAlign: body1Align }}
-					>
+					<p className="ub_number_one_body" style={{ textAlign: body1Align }}>
 						{columnOneBody}
 					</p>
 				</div>
-				<div
-					className="ub_number_2"
-					style={{
-						borderColor: borderColor
-					}}
-				>
+				<div className="ub_number_2" style={{ borderColor: borderColor }}>
 					<div
 						className="ub_number_box_number"
-						style={{
-							backgroundColor: numberBackground
-						}}
+						style={{ backgroundColor: numberBackground }}
 					>
-						<p
-							className="ub_number_two_number"
-							style={{
-								color: numberColor
-							}}
-						>
+						<p className="ub_number_two_number" style={{ color: numberColor }}>
 							{columnTwoNumber}
 						</p>
 					</div>
-					<p
-						className="ub_number_two_title"
-						style={{ textAlign: title2Align }}
-					>
+					<p className="ub_number_two_title" style={{ textAlign: title2Align }}>
 						{columnTwoTitle}
 					</p>
-					<p
-						className="ub_number_two_body"
-						style={{ textAlign: body2Align }}
-					>
+					<p className="ub_number_two_body" style={{ textAlign: body2Align }}>
 						{columnTwoBody}
 					</p>
 				</div>
-				<div
-					className="ub_number_3"
-					style={{
-						borderColor: borderColor
-					}}
-				>
+				<div className="ub_number_3" style={{ borderColor: borderColor }}>
 					<div
 						className="ub_number_box_number"
-						style={{
-							backgroundColor: numberBackground
-						}}
+						style={{ backgroundColor: numberBackground }}
 					>
 						<p
 							className="ub_number_three_number"
-							style={{
-								color: numberColor
-							}}
+							style={{ color: numberColor }}
 						>
 							{columnThreeNumber}
 						</p>
@@ -304,10 +226,7 @@ export const version_1_1_5 = props => {
 					>
 						{columnThreeTitle}
 					</p>
-					<p
-						className="ub_number_three_body"
-						style={{ textAlign: body3Align }}
-					>
+					<p className="ub_number_three_body" style={{ textAlign: body3Align }}>
 						{columnThreeBody}
 					</p>
 				</div>

@@ -17,6 +17,7 @@ import {
 } from "./oldVersions";
 import { blockControls, editorDisplay, upgradeToStyledBox } from "./components";
 import { mergeRichTextArray, upgradeButtonLabel } from "../../common";
+import { useEffect } from "react";
 
 const { __ } = wp.i18n;
 const { registerBlockType, createBlock } = wp.blocks;
@@ -86,45 +87,47 @@ registerBlockType("ub/notification-box", {
 	])(function (props) {
 		const { isSelected, className, attributes, replaceBlock, block } = props;
 
-		return [
-			isSelected && blockControls(props),
+		return (
+			<>
+				{isSelected && blockControls(props)}
 
-			<div className={className}>
-				<button
-					onClick={() => {
-						const { ub_notify_info } = attributes;
-						let firstColor;
-						let secondColor;
-						switch (attributes.ub_selected_notify) {
-							case "ub_notify_success":
-								[firstColor, secondColor] = ["#3c763d", "#dff0d8"];
-								break;
-							case "ub_notify_warning":
-								[firstColor, secondColor] = ["#d8000c", "#ffd2d2"];
-								break;
-							case "ub_notify_info":
-							default:
-								[firstColor, secondColor] = ["#31708f", "#d9edf7"];
-								break;
-						}
-						replaceBlock(
-							block.clientId,
-							createBlock("ub/styled-box", {
-								mode: "notification",
-								text: [mergeRichTextArray(ub_notify_info)],
-								textAlign: [attributes.align],
-								backColor: secondColor,
-								foreColor: firstColor,
-								outlineColor: firstColor,
-							})
-						);
-					}}
-				>
-					{upgradeButtonLabel}
-				</button>
-				{editorDisplay(props)}
-			</div>,
-		];
+				<div className={className}>
+					<button
+						onClick={() => {
+							const { ub_notify_info } = attributes;
+							let firstColor;
+							let secondColor;
+							switch (attributes.ub_selected_notify) {
+								case "ub_notify_success":
+									[firstColor, secondColor] = ["#3c763d", "#dff0d8"];
+									break;
+								case "ub_notify_warning":
+									[firstColor, secondColor] = ["#d8000c", "#ffd2d2"];
+									break;
+								case "ub_notify_info":
+								default:
+									[firstColor, secondColor] = ["#31708f", "#d9edf7"];
+									break;
+							}
+							replaceBlock(
+								block.clientId,
+								createBlock("ub/styled-box", {
+									mode: "notification",
+									text: [mergeRichTextArray(ub_notify_info)],
+									textAlign: [attributes.align],
+									backColor: secondColor,
+									foreColor: firstColor,
+									outlineColor: firstColor,
+								})
+							);
+						}}
+					>
+						{upgradeButtonLabel}
+					</button>
+					{editorDisplay(props)}
+				</div>
+			</>
+		);
 	}),
 
 	/**
@@ -206,23 +209,27 @@ registerBlockType("ub/notification-box-block", {
 	])(function (props) {
 		const { isSelected, className, block, replaceBlock, attributes } = props;
 
-		if (attributes.blockID === "") {
-			props.setAttributes({ blockID: block.clientId });
-		}
+		useEffect(() => {
+			if (attributes.blockID === "") {
+				props.setAttributes({ blockID: block.clientId });
+			}
+		});
 
-		return [
-			isSelected && blockControls(props),
-			<div className={className}>
-				<button
-					onClick={() =>
-						replaceBlock(block.clientId, upgradeToStyledBox(attributes))
-					}
-				>
-					{upgradeButtonLabel}
-				</button>
-				{editorDisplay(props)}
-			</div>,
-		];
+		return (
+			<>
+				{isSelected && blockControls(props)}
+				<div className={className}>
+					<button
+						onClick={() =>
+							replaceBlock(block.clientId, upgradeToStyledBox(attributes))
+						}
+					>
+						{upgradeButtonLabel}
+					</button>
+					{editorDisplay(props)}
+				</div>
+			</>
+		);
 	}),
 	save: () => null,
 });

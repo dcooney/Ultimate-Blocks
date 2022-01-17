@@ -9,26 +9,13 @@ const {
 	PanelColorSettings,
 } = wp.blockEditor || wp.editor;
 
-const {
-	Button,
-	PanelBody,
-	RangeControl,
-	ToolbarGroup,
-	ToolbarButton,
-} = wp.components;
+const { Button, PanelBody, RangeControl, ToolbarGroup, ToolbarButton } =
+	wp.components;
 
 import icons from "./icons";
 
 export const blockControls = (props) => {
-	const {
-		editable,
-		activeAlignment,
-		attributes,
-		setAttributes,
-		setState,
-	} = props;
-
-	const { textAlign, authorAlign, authorRoleAlign } = attributes;
+	const { setAttributes, setState, editable, activeAlignment } = props;
 
 	return (
 		<BlockControls>
