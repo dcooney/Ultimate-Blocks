@@ -1261,7 +1261,85 @@ $defaultValues = array(
                 'items' => array(
                     'type' => 'number'
                 )
-            )
+            ),
+
+            'hasCommonPadding' => array(
+                'type' => 'boolean',
+                'default' => true
+            ),
+
+            'topPadding' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+            'rightPadding' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+            'bottomPadding' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+            'leftPadding' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+
+            'topPaddingUnit' => array(
+                'type' => 'string',
+                'default' => 'px'
+            ),
+            'rightPaddingUnit' => array(
+                'type' => 'string',
+                'default' => 'px'
+            ),
+            'bottomPaddingUnit' => array(
+                'type' => 'string',
+                'default' => 'px'
+            ),
+            'leftPaddingUnit' => array(
+                'type' => 'string',
+                'default' => 'px'
+            ),
+
+            'hasCommonMargin' => array(
+                'type' => 'boolean',
+                'default' => true
+            ),
+            
+            'topMargin' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+            'rightMargin' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+            'bottomMargin' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+            'leftMargin' => array(
+                'type' => 'number',
+                'default' => 0
+            ),
+
+            'topMarginUnit' => array(
+                'type' => 'string',
+                'default' => 'px'
+            ),
+            'rightMarginUnit' => array(
+                'type' => 'string',
+                'default' => 'px'
+            ),
+            'bottomMarginUnit' => array(
+                'type' => 'string',
+                'default' => 'px'
+            ),
+            'leftMarginUnit' => array(
+                'type' => 'string',
+                'default' => 'px'
+            ),
         )
     ),
     'ub/progress-bar' => array(

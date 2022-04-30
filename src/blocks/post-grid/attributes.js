@@ -91,6 +91,84 @@ const attributes = {
 		type: "string",
 		default: "h4",
 	},
+
+	hasCommonPadding: {
+		type: "boolean",
+		default: true,
+	},
+
+	topPadding: {
+		type: "number",
+		default: 0,
+	},
+	rightPadding: {
+		type: "number",
+		default: 0,
+	},
+	bottomPadding: {
+		type: "number",
+		default: 0,
+	},
+	leftPadding: {
+		type: "number",
+		default: 0,
+	},
+
+	topPaddingUnit: {
+		type: "string",
+		default: "px",
+	},
+	rightPaddingUnit: {
+		type: "string",
+		default: "px",
+	},
+	bottomPaddingUnit: {
+		type: "string",
+		default: "px",
+	},
+	leftPaddingUnit: {
+		type: "string",
+		default: "px",
+	},
+
+	hasCommonMargin: {
+		type: "boolean",
+		default: true,
+	},
+
+	topMargin: {
+		type: "number",
+		default: 0,
+	},
+	rightMargin: {
+		type: "number",
+		default: 0,
+	},
+	bottomMargin: {
+		type: "number",
+		default: 0,
+	},
+	leftMargin: {
+		type: "number",
+		default: 0,
+	},
+
+	topMarginUnit: {
+		type: "string",
+		default: "px",
+	},
+	rightMarginUnit: {
+		type: "string",
+		default: "px",
+	},
+	bottomMarginUnit: {
+		type: "string",
+		default: "px",
+	},
+	leftMarginUnit: {
+		type: "string",
+		default: "px",
+	},
 };
 
 export default attributes;

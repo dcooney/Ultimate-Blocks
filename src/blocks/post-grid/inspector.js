@@ -117,6 +117,18 @@ export default class Inspector extends Component {
 			tagsList: [],
 			authorsList: [],
 			currentTagName: "",
+
+			topMarginRaw: "",
+			rightMarginRaw: "",
+			bottomMarginRaw: "",
+			leftMarginRaw: "",
+			lastEditedMargin: "",
+
+			topPaddingRaw: "",
+			rightPaddingRaw: "",
+			bottomPaddingRaw: "",
+			leftPaddingRaw: "",
+			lastEditedPadding: "",
 		};
 	}
 	componentDidMount() {
@@ -161,6 +173,29 @@ export default class Inspector extends Component {
 					this.setState({ authorsList: [] });
 				}
 			});
+
+		const {
+			topMargin,
+			rightMargin,
+			bottomMargin,
+			leftMargin,
+			topPadding,
+			rightPadding,
+			bottomPadding,
+			leftPadding,
+		} = this.props.attributes;
+
+		this.setState({
+			topMarginRaw: String(topMargin || ""),
+			rightMarginRaw: String(rightMargin || ""),
+			bottomMarginRaw: String(bottomMargin || ""),
+			leftMarginRaw: String(leftMargin || ""),
+
+			topPaddingRaw: String(topPadding || ""),
+			rightPaddingRaw: String(rightPadding || ""),
+			bottomPaddingRaw: String(bottomPadding || ""),
+			leftPaddingRaw: String(leftPadding || ""),
+		});
 	}
 
 	componentWillUnmount() {
@@ -168,7 +203,23 @@ export default class Inspector extends Component {
 	}
 
 	render() {
-		const { categoriesList, tagsList, authorsList } = this.state;
+		const {
+			categoriesList,
+			tagsList,
+			authorsList,
+
+			topPaddingRaw,
+			rightPaddingRaw,
+			bottomPaddingRaw,
+			leftPaddingRaw,
+			lastEditedPadding,
+
+			topMarginRaw,
+			rightMarginRaw,
+			bottomMarginRaw,
+			leftMarginRaw,
+			lastEditedMargin,
+		} = this.state;
 
 		const {
 			attributes: {
@@ -193,6 +244,28 @@ export default class Inspector extends Component {
 				postTitleTag,
 				authorArray,
 				tagArray,
+
+				hasCommonMargin,
+				topMargin,
+				rightMargin,
+				bottomMargin,
+				leftMargin,
+
+				topMarginUnit,
+				rightMarginUnit,
+				bottomMarginUnit,
+				leftMarginUnit,
+
+				hasCommonPadding,
+				topPadding,
+				rightPadding,
+				bottomPadding,
+				leftPadding,
+
+				topPaddingUnit,
+				rightPaddingUnit,
+				bottomPaddingUnit,
+				leftPaddingUnit,
 			},
 			setAttributes,
 			posts,
@@ -256,6 +329,59 @@ export default class Inspector extends Component {
 			/>
 		);
 
+		const setAllMargins = (val) => {
+			setAttributes({
+				topMargin: val,
+				rightMargin: val,
+				bottomMargin: val,
+				leftMargin: val,
+			});
+		};
+
+		const setAllMarginUnits = (val) => {
+			setAttributes({
+				topMarginUnit: val,
+				rightMarginUnit: val,
+				bottomMarginUnit: val,
+				leftMarginUnit: val,
+			});
+		};
+
+		const setAllRawMargins = (val) => {
+			this.setState({
+				topMarginRaw: val,
+				rightMarginRaw: val,
+				bottomMarginRaw: val,
+				leftMarginRaw: val,
+			});
+		};
+
+		const setAllPaddings = (val) => {
+			setAttributes({
+				topPadding: val,
+				rightPadding: val,
+				bottomPadding: val,
+				leftPadding: val,
+			});
+		};
+
+		const setAllPaddingUnits = (val) => {
+			setAttributes({
+				topPaddingUnit: val,
+				rightPaddingUnit: val,
+				bottomPaddingUnit: val,
+				leftPaddingUnit: val,
+			});
+		};
+
+		const setAllRawPaddings = (val) => {
+			this.setState({
+				topPaddingRaw: val,
+				rightPaddingRaw: val,
+				bottomPaddingRaw: val,
+				leftPaddingRaw: val,
+			});
+		};
 		return (
 			<InspectorControls>
 				<PanelBody title={__("Post Grid Settings", "ultimate-blocks")}>
@@ -445,6 +571,375 @@ export default class Inspector extends Component {
 						)}
 					</PanelBody>
 				)}
+				<PanelBody title={__("Spacing")}>
+					<p>{__("Margin")}</p>
+					<>
+						<ToggleControl
+							label={__("Set common margin size")}
+							checked={hasCommonMargin}
+							onChange={() => {
+								setAttributes({ hasCommonMargin: !hasCommonMargin });
+
+								const setMarginValue = (
+									newMargin,
+									newMarginUnit,
+									newMarginRaw
+								) => {
+									setAllMargins(newMargin);
+									setAllMarginUnits(newMarginUnit);
+									setAllRawMargins(newMarginRaw);
+								};
+
+								if (hasCommonMargin) {
+									setMarginValue(topMargin, topMarginUnit, topMarginRaw);
+								} else {
+									switch (lastEditedMargin) {
+										case "top":
+											setMarginValue(topMargin, topMarginUnit, topMarginRaw);
+											break;
+										case "right":
+											setMarginValue(
+												rightMargin,
+												rightMarginUnit,
+												rightMarginRaw
+											);
+											break;
+										case "bottom":
+											setMarginValue(
+												bottomMargin,
+												bottomMarginUnit,
+												bottomMarginRaw
+											);
+											break;
+										case "left":
+											setMarginValue(leftMargin, leftMarginUnit, leftMarginRaw);
+											break;
+										default:
+											if (topMargin) {
+												setMarginValue(topMargin, topMarginUnit, topMarginRaw);
+											} else if (rightMargin) {
+												setMarginValue(
+													rightMargin,
+													rightMarginUnit,
+													rightMarginRaw
+												);
+											} else if (bottomMargin) {
+												setMarginValue(
+													bottomMargin,
+													bottomMarginUnit,
+													bottomMarginRaw
+												);
+											} else if (leftMargin) {
+												setMarginValue(
+													leftMargin,
+													leftMarginUnit,
+													leftMarginRaw
+												);
+											} else {
+												setAllMargins(0);
+												setAllMarginUnits("px");
+												setAllRawMargins("");
+											}
+									}
+								}
+
+								this.setState({ lastEditedMargin: "" });
+							}}
+						/>
+						<div className="ub-spacing-margin-unit-container">
+							{["px", "em", "%"].map((u) => (
+								<span
+									onClick={() => {
+										if (hasCommonMargin) {
+											setAllMarginUnits(u);
+										} else {
+											switch (lastEditedMargin) {
+												case "top":
+													setAttributes({ topMarginUnit: u });
+													break;
+												case "right":
+													setAttributes({ rightMarginUnit: u });
+													break;
+												case "bottom":
+													setAttributes({ bottomMarginUnit: u });
+													break;
+												case "left":
+													setAttributes({ leftMarginUnit: u });
+													break;
+												default:
+													setAllMarginUnits(u);
+											}
+										}
+									}}
+									style={{
+										fontWeight: topMarginUnit === u ? "bold" : "normal",
+									}}
+								>
+									{u}
+								</span>
+							))}
+						</div>
+						<div className="ub-spacing-panel">
+							<input
+								type="number"
+								value={topMarginRaw}
+								min={0}
+								onChange={(e) => {
+									this.setState({ topMarginRaw: e.target.value });
+									setAttributes({ topMargin: Number(e.target.value) });
+								}}
+								onFocus={() => {
+									if (hasCommonMargin) {
+										this.setState({ lastEditedMargin: "top" });
+									}
+								}}
+							/>
+							{!hasCommonMargin && (
+								<>
+									<input
+										type="number"
+										value={rightMarginRaw}
+										min={0}
+										onChange={(e) => {
+											this.setState({ rightMarginRaw: e.target.value });
+											setAttributes({ rightMargin: Number(e.target.value) });
+										}}
+										onFocus={() => this.setState({ lastEditedMargin: "right" })}
+									/>
+									<input
+										type="number"
+										value={bottomMarginRaw}
+										min={0}
+										onChange={(e) => {
+											this.setState({ bottomMarginRaw: e.target.value });
+											setAttributes({ bottomMargin: Number(e.target.value) });
+										}}
+										onFocus={() =>
+											this.setState({ lastEditedMargin: "bottom" })
+										}
+									/>
+									<input
+										type="number"
+										value={leftMarginRaw}
+										min={0}
+										onChange={(e) => {
+											this.setState({ leftMarginRaw: e.target.value });
+											setAttributes({ leftMargin: Number(e.target.value) });
+										}}
+										onFocus={() => this.setState({ lastEditedMargin: "left" })}
+									/>
+								</>
+							)}
+							<button
+								onClick={() => {
+									setAllMargins(0);
+									setAllMarginUnits("px");
+									setAllRawMargins("");
+								}}
+							>
+								{__("Reset")}
+							</button>
+							{!hasCommonMargin && (
+								<>
+									<span>{__("Top")}</span>
+									<span>{__("Right")}</span>
+									<span>{__("Bottom")}</span>
+									<span>{__("Left")}</span>
+								</>
+							)}
+						</div>
+					</>
+					<p>{__("Padding")}</p>
+					<>
+						<ToggleControl
+							label={__("Set common padding size")}
+							checked={hasCommonPadding}
+							onChange={() => {
+								setAttributes({ hasCommonPadding: !hasCommonPadding });
+
+								const setPaddingValue = (
+									newPadding,
+									newPaddingUnit,
+									newPaddingRaw
+								) => {
+									setAllPaddings(newPadding);
+									setAllPaddingUnits(newPaddingUnit);
+									setAllRawPaddings(newPaddingRaw);
+								};
+
+								if (hasCommonPadding) {
+									setPaddingValue(topPadding, topPaddingUnit, topPaddingRaw);
+								} else {
+									switch (lastEditedPadding) {
+										case "top":
+											setPaddingValue(
+												topPadding,
+												topPaddingUnit,
+												topPaddingRaw
+											);
+											break;
+										case "right":
+											setPaddingValue(
+												rightPadding,
+												rightPaddingUnit,
+												rightPaddingRaw
+											);
+											break;
+										case "bottom":
+											setPaddingValue(
+												bottomPadding,
+												bottomPaddingUnit,
+												bottomPaddingRaw
+											);
+											break;
+										case "left":
+											setPaddingValue(
+												leftPadding,
+												leftPaddingUnit,
+												leftPaddingRaw
+											);
+											break;
+										default:
+											if (topPadding) {
+												setPaddingValue(
+													topPadding,
+													topPaddingUnit,
+													topPaddingRaw
+												);
+											} else if (rightPadding) {
+												setPaddingValue(
+													rightPadding,
+													rightPaddingUnit,
+													rightPaddingRaw
+												);
+											} else if (bottomPadding) {
+												setPaddingValue(
+													bottomPadding,
+													bottomPaddingUnit,
+													bottomPaddingRaw
+												);
+											} else if (leftPadding) {
+												setPaddingValue(
+													leftPadding,
+													leftPaddingUnit,
+													leftPaddingRaw
+												);
+											} else {
+												setAllPaddings(0);
+												setAllPaddingUnits("px");
+												setAllRawPaddings("");
+											}
+									}
+								}
+								this.setState({ lastEditedPadding: "" });
+							}}
+						/>
+						<div className="ub-spacing-padding-unit-container">
+							{["px", "em", "%"].map((u) => (
+								<span
+									onClick={() => {
+										if (hasCommonPadding) {
+											setAllPaddingUnits(u);
+										} else {
+											switch (lastEditedPadding) {
+												case "top":
+													setAttributes({ topPaddingUnit: u });
+													break;
+												case "right":
+													setAttributes({ rightPaddingUnit: u });
+													break;
+												case "bottom":
+													setAttributes({ bottomPaddingUnit: u });
+													break;
+												case "left":
+													setAttributes({ leftPaddingUnit: u });
+													break;
+												default:
+													setAllPaddingUnits(u);
+											}
+										}
+									}}
+									style={{
+										fontWeight: topPaddingUnit === u ? "bold" : "normal",
+									}}
+								>
+									{u}
+								</span>
+							))}
+						</div>
+						<div className="ub-spacing-panel">
+							<input
+								type="number"
+								value={topPaddingRaw}
+								min={0}
+								onChange={(e) => {
+									this.setState({ topPaddingRaw: e.target.value });
+									setAttributes({ topPadding: Number(e.target.value) });
+								}}
+								onFocus={() => {
+									if (!hasCommonPadding) {
+										this.setState({ lastEditedPadding: "top" });
+									}
+								}}
+							/>
+							{!hasCommonPadding && (
+								<>
+									<input
+										type="number"
+										value={rightPaddingRaw}
+										min={0}
+										onChange={(e) => {
+											this.setState({ rightPaddingRaw: e.target.value });
+											setAttributes({ rightPadding: Number(e.target.value) });
+										}}
+										onFocus={() =>
+											this.setState({ lastEditedPadding: "right" })
+										}
+									/>
+									<input
+										type="number"
+										value={bottomPaddingRaw}
+										min={0}
+										onChange={(e) => {
+											this.setState({ bottomPaddingRaw: e.target.value });
+											setAttributes({ bottomPadding: Number(e.target.value) });
+										}}
+										onFocus={() =>
+											this.setState({ lastEditedPadding: "bottom" })
+										}
+									/>
+									<input
+										type="number"
+										value={leftPaddingRaw}
+										min={0}
+										onChange={(e) => {
+											this.setState({ leftPaddingRaw: e.target.value });
+											setAttributes({ leftPadding: Number(e.target.value) });
+										}}
+										onFocus={() => this.setState({ lastEditedPadding: "left" })}
+									/>
+								</>
+							)}
+							<button
+								onClick={() => {
+									setAllPaddings(0);
+									setAllPaddingUnits("px");
+									setAllRawPaddings("");
+								}}
+							>
+								{__("Reset")}
+							</button>
+							{!hasCommonPadding && (
+								<>
+									<span>{__("Top")}</span>
+									<span>{__("Right")}</span>
+									<span>{__("Bottom")}</span>
+									<span>{__("Left")}</span>
+								</>
+							)}
+						</div>
+					</>
+				</PanelBody>
 			</InspectorControls>
 		);
 	}

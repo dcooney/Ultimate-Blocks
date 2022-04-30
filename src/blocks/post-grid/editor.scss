@@ -30,3 +30,31 @@
 .ub-block-post-grid-excerpt > div > p:last-child {
 	margin-bottom: 0;
 }
+
+/*MOVE FF TO COMMON.SCSS*/
+
+.ub-spacing-panel {
+	$spacingPanelInterval: 45px;
+	display: grid;
+	grid-template-columns: $spacingPanelInterval $spacingPanelInterval $spacingPanelInterval $spacingPanelInterval $spacingPanelInterval;
+	input {
+		text-align: end;
+
+		//MOZILLA
+		-moz-appearance: textfield;
+
+		//CHROME
+		&::-webkit-outer-spin-button,
+		&::-webkit-inner-spin-button {
+			-webkit-appearance: none;
+			margin: 0;
+		}
+	}
+}
+
+.ub-spacing-margin-unit-container,
+.ub-spacing-padding-unit-container {
+	display: flex;
+	justify-content: flex-end;
+	gap: 10px;
+}
