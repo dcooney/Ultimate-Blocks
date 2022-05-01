@@ -13,9 +13,8 @@ const { BlockControls, BlockAlignmentToolbar } = wp.blockEditor || wp.editor;
 const { Placeholder, Spinner, Toolbar, QueryControls } = wp.components;
 const { addQueryArgs } = wp.url;
 const { apiFetch } = wp;
-const canSelectMultipleCategories = QueryControls.toString().includes(
-	"selectedCategories"
-);
+const canSelectMultipleCategories =
+	QueryControls.toString().includes("selectedCategories");
 
 //function below taken from https://stackoverflow.com/a/37616104
 const filterObjectAttributes = (obj, condition) =>
@@ -66,6 +65,9 @@ export default registerBlockType("ub/post-grid", {
 		const { getCurrentPostId } =
 			select("core/block--editor") || select("core/editor"); //double dashes are needed
 
+		const { getBlock, getClientIdsWithDescendants } =
+			select("core/block-editor") || select("core/editor");
+
 		const getPosts = filterObjectAttributes(
 			{
 				categories: canSelectMultipleCategories
@@ -86,10 +88,20 @@ export default registerBlockType("ub/post-grid", {
 
 		return {
 			posts: getEntityRecords("postType", "post", getPosts),
+			block: getBlock(props.clientId),
+			getBlock,
+			getClientIdsWithDescendants,
 		};
 	})((props) => {
-		const { attributes, setAttributes, posts } = props;
-		const { postLayout, wrapAlignment, categories } = attributes;
+		const {
+			block,
+			getBlock,
+			getClientIdsWithDescendants,
+			attributes,
+			setAttributes,
+			posts,
+		} = props;
+		const { postLayout, wrapAlignment, categories, blockID } = attributes;
 
 		const emptyPosts = Array.isArray(posts) && posts.length;
 
@@ -113,6 +125,17 @@ export default registerBlockType("ub/post-grid", {
 						categories: "",
 					});
 				});
+		}
+
+		if (
+			blockID === "" ||
+			getClientIdsWithDescendants().some(
+				(ID) =>
+					"blockID" in getBlock(ID).attributes &&
+					getBlock(ID).attributes.blockID === blockID
+			)
+		) {
+			setAttributes({ blockID: block.clientId });
 		}
 
 		if (!emptyPosts) {

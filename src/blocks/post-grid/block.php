@@ -224,15 +224,11 @@ function ub_render_post_grid_block( $attributes ){
             $grid_class .= ' columns-' . $attributes['columns'];
         }
 
-        /* Post grid section tag */
-
-        $section_tag = 'section';
-
         /* Output the post markup */
         $block_content = sprintf(
-            '<%1$s class="%2$s"><div class="%3$s">%4$s</div></%1$s>',
-            $section_tag,
+            '<section class="%1$s" id="%2$s"><div class="%3$s">%4$s</div></section>',
             esc_attr( $class ),
+            'ub-post-grid-' . $attributes['blockID'] ,
             esc_attr( $grid_class ),
             $post_grid
         );

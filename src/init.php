@@ -616,6 +616,19 @@ function ub_include_block_attribute_css() {
                         'color: ' . $attributes['numberColor'] . ';' . PHP_EOL .
                     '}';
                     break;
+                case 'ub/post-grid':
+                    $prefix = '#ub-post-grid-' . $attributes['blockID'];
+                    $blockStylesheets .= $prefix . '{' . PHP_EOL .
+                        'margin: ' .  $attributes['topMargin'] . $attributes['topMarginUnit'] . ( $attributes['hasCommonMargin'] ? '' :
+                                    ' ' . $attributes['rightMargin'] . $attributes['rightMarginUnit'] .
+                                    ' ' . $attributes['bottomMargin'] . $attributes['bottomMarginUnit'] .
+                                    ' ' . $attributes['leftMargin'] . $attributes['leftMarginUnit'] ) . ';' . PHP_EOL .
+                        'padding: ' . $attributes['topPadding'] . $attributes['topPaddingUnit'] . ( $attributes['hasCommonPadding'] ? '' :
+                                    ' ' . $attributes['rightPadding'] . $attributes['rightPaddingUnit'] .
+                                    ' ' . $attributes['bottomPadding'] . $attributes['bottomPaddingUnit'] .
+                                    ' ' . $attributes['leftPadding'] . $attributes['leftPaddingUnit'] ) . ';' . PHP_EOL .
+                    '}';
+                    break;
                 case 'ub/progress-bar':
                     $prefix = '#ub-progress-bar-'. $attributes['blockID'];
                     $blockStylesheets .=  $prefix . ' .ub_progress-bar-text p{' . PHP_EOL .
