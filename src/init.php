@@ -618,16 +618,26 @@ function ub_include_block_attribute_css() {
                     break;
                 case 'ub/post-grid':
                     $prefix = '#ub-post-grid-' . $attributes['blockID'];
-                    $blockStylesheets .= $prefix . '{' . PHP_EOL .
-                        'margin: ' .  $attributes['topMargin'] . $attributes['topMarginUnit'] . ( $attributes['hasCommonMargin'] ? '' :
-                                    ' ' . $attributes['rightMargin'] . $attributes['rightMarginUnit'] .
-                                    ' ' . $attributes['bottomMargin'] . $attributes['bottomMarginUnit'] .
-                                    ' ' . $attributes['leftMargin'] . $attributes['leftMarginUnit'] ) . ';' . PHP_EOL .
-                        'padding: ' . $attributes['topPadding'] . $attributes['topPaddingUnit'] . ( $attributes['hasCommonPadding'] ? '' :
+
+                    $marginSettings = 'margin: ' .  $attributes['topMargin'] . $attributes['topMarginUnit'] . ( $attributes['hasCommonMargin'] ? '' :
+                        ' ' . $attributes['rightMargin'] . $attributes['rightMarginUnit'] .
+                        ' ' . $attributes['bottomMargin'] . $attributes['bottomMarginUnit'] .
+                        ' ' . $attributes['leftMargin'] . $attributes['leftMarginUnit'] ) . ';' . PHP_EOL;
+
+                    if(in_array( wp_get_theme(), ['Twenty Twenty', 'Twenty Twenty-One'] )) {
+                        $blockStylesheets .= $prefix . ' .ub-post-grid-items{' . PHP_EOL .
+                            $marginSettings .
+                        '}' . PHP_EOL .
+                        $prefix . '{' . PHP_EOL;
+                    }
+                    else {
+                        $blockStylesheets .= $prefix . '{' . PHP_EOL .  $marginSettings;
+                    }
+                        $blockStylesheets .= 'padding: ' . $attributes['topPadding'] . $attributes['topPaddingUnit'] . ( $attributes['hasCommonPadding'] ? '' :
                                     ' ' . $attributes['rightPadding'] . $attributes['rightPaddingUnit'] .
                                     ' ' . $attributes['bottomPadding'] . $attributes['bottomPaddingUnit'] .
                                     ' ' . $attributes['leftPadding'] . $attributes['leftPaddingUnit'] ) . ';' . PHP_EOL .
-                    '}';
+                    '}' . PHP_EOL;
                     break;
                 case 'ub/progress-bar':
                     $prefix = '#ub-progress-bar-'. $attributes['blockID'];
