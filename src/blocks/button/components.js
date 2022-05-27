@@ -514,7 +514,7 @@ export const inspectorControls = (props) => {
 					/>
 				</PanelBody>
 				<PanelBody
-					title={__("Button Colors Revamped", "ultimate-blocks")}
+					title={__("Button Colors", "ultimate-blocks")}
 					initialOpen={true}
 				>
 					<ToggleControl
